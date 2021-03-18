@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - "*"
-#  pull_request:
-#    branches: [main]
 
 jobs:
   staging:
@@ -13,16 +11,17 @@ jobs:
     runs-on: roderunners
     steps:
       - uses: actions/checkout@v2
+
       - name: env
         run: env
 
-      - name: Helm
-        uses: deliverybot/helm@v1
-        with:
-          release: rode
-          namespace: rode-staging
-          chart: rode
-          token: '${{ github.token }}'
-          dry-run: true
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+      - name: Install Helm
+        run: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      - name: Add repo
+        run: |
+          helm repo add rode https://rode.github.io/charts
+          helm repo update
+
+      - name: Helm upgrade
+        run: helm upgrade --dry-run --install --namespace rode-staging rode-staging rode/rode
