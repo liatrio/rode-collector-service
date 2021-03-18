@@ -13,6 +13,8 @@ jobs:
     runs-on: roderunners
     steps:
       - uses: actions/checkout@v2
+      - name: env
+        run: env
 
       - name: Helm
         uses: deliverybot/helm@v1
