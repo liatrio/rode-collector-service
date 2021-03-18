@@ -25,7 +25,7 @@ jobs:
 
       - name: Build
         run: go build -v .
-        
+
   license-check:
     runs-on: self-hosted
     container: golang:1.15
