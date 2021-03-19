@@ -24,4 +24,4 @@ jobs:
           helm repo update
 
       - name: Helm upgrade
-        run: helm upgrade --dry-run --install --namespace rode-staging rode-staging rode/rode
+        run: helm upgrade --dry-run --install --namespace rode-staging rode-staging rode/rode --set grafeas-elasticsearch.grafeas.elasticsearch.username=grafeas --set grafeas-elasticsearch.grafeas.elasticsearch.password="definite1y_secure!"
