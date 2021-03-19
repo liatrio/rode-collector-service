@@ -12,9 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: env
-        run: env
-
       - name: Install Helm
         run: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
@@ -24,4 +21,4 @@ jobs:
           helm repo update
 
       - name: Helm upgrade
-        run: helm upgrade --dry-run --install --namespace rode-staging rode-staging rode/rode --set grafeas-elasticsearch.grafeas.elasticsearch.username=grafeas --set grafeas-elasticsearch.grafeas.elasticsearch.password="definite1y_secure!"
+        run: helm upgrade --install --namespace rode-staging rode-staging rode/rode --set grafeas-elasticsearch.grafeas.elasticsearch.username=grafeas --set grafeas-elasticsearch.grafeas.elasticsearch.password="definite1y_secure!"
