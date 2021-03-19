@@ -26,4 +26,5 @@ jobs:
           --set grafeas-elasticsearch.grafeas.elasticsearch.username=grafeas \
           --set grafeas-elasticsearch.grafeas.elasticsearch.password="definite1y_secure!" \
           --set rode-ui.ingress.enabled=true \
-          --set rode-ui.ingress.hosts[0].host=rode-staging.toolchain.lead.sandbox.liatr.io
+          --set rode-ui.ingress.hosts[0].host=rode-staging.toolchain.lead.sandbox.liatr.io \
+          --set rode-ui.ingress.hosts[0].paths[0]="/"
