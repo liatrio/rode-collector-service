@@ -21,4 +21,8 @@ jobs:
           helm repo update
 
       - name: Helm upgrade
-        run: helm upgrade --namespace rode-staging --create-namespace --install rode-staging rode/rode --set grafeas-elasticsearch.grafeas.elasticsearch.username=grafeas --set grafeas-elasticsearch.grafeas.elasticsearch.password="definite1y_secure!"
+        run: |
+          helm upgrade --namespace rode-staging --create-namespace --install rode-staging rode/rode \
+          --set grafeas-elasticsearch.grafeas.elasticsearch.username=grafeas \
+          --set grafeas-elasticsearch.grafeas.elasticsearch.password="definite1y_secure!" \
+          --set rode-ui.ingress.enabled=true
