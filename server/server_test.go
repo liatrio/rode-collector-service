@@ -210,7 +210,7 @@ var _ = Describe("rode server", func() {
 		ctx = context.Background()
 
 		// not using the constructor as it has side effects. side effects are tested under the "initialize" context
-		server = &rodeServer{
+		server = &RodeServer{
 			logger:              logger,
 			grafeasCommon:       grafeasClient,
 			grafeasProjects:     grafeasProjectsClient,

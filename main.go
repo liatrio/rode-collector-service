@@ -18,6 +18,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/rode/rode/pkg/provider"
+	"go.uber.org/fx"
 	"log"
 	"net"
 	"net/http"
@@ -52,7 +54,46 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+type mainParams struct {
+	fx.In
+	Logger        *zap.Logger
+	GrpcServer    *grpc.Server
+	GrpcGateway   *http.Server
+	HealthzServer server.HealthzServer
+	Mux           cmux.CMux
+	RodeServer    pb.RodeServer
+}
+
+func start(params mainParams) error {
+	fmt.Println("made it")
+	pb.RegisterRodeServer(params.GrpcServer, params.RodeServer)
+	grpc_health_v1.RegisterHealthServer(params.GrpcServer, params.HealthzServer)
+
+	return nil
+}
+
 func main() {
+	deps := fx.Provide(
+		provider.NewConfig,
+		provider.NewLogger,
+		provider.NewEsClient,
+		provider.NewGrafeasClients,
+		provider.NewCmux,
+		provider.NewGrpcServer,
+		provider.NewGrpcGateway,
+		provider.NewHealthzServer,
+		provider.NewEsutilClient,
+		provider.NewIndexManager,
+		provider.NewOpaClient,
+		provider.NewResourceManager,
+		provider.NewRodeServer,
+	)
+	//app := fx.New(fx.NopLogger, deps, fx.Invoke(start))
+	app := fx.New(deps, fx.Invoke(start))
+	app.Run()
+}
+
+func mainprev() {
 	c, err := config.Build(os.Args[0], os.Args[1:])
 	if err != nil {
 		log.Fatalf("failed to build config: %v", err)

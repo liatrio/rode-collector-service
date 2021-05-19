@@ -59,7 +59,7 @@ const (
 	pitKeepAlive                      = "5m"
 )
 
-// NewRodeServer constructor for rodeServer
+// NewRodeServer constructor for RodeServer
 func NewRodeServer(
 	logger *zap.Logger,
 	grafeasCommon grafeas_proto.GrafeasV1Beta1Client,
@@ -71,7 +71,7 @@ func NewRodeServer(
 	resourceManager resource.Manager,
 	indexManager indexmanager.IndexManager,
 ) (pb.RodeServer, error) {
-	rodeServer := &rodeServer{
+	rodeServer := &RodeServer{
 		logger:              logger,
 		grafeasCommon:       grafeasCommon,
 		grafeasProjects:     grafeasProjects,
@@ -82,14 +82,14 @@ func NewRodeServer(
 		resourceManager:     resourceManager,
 		indexManager:        indexManager,
 	}
-	if err := rodeServer.initialize(context.Background()); err != nil {
-		return nil, fmt.Errorf("failed to initialize rode server: %s", err)
-	}
+	//if err := RodeServer.initialize(context.Background()); err != nil {
+	//	return nil, fmt.Errorf("failed to initialize rode server: %s", err)
+	//}
 
 	return rodeServer, nil
 }
 
-type rodeServer struct {
+type RodeServer struct {
 	pb.UnimplementedRodeServer
 	logger              *zap.Logger
 	esClient            *elasticsearch.Client
@@ -102,7 +102,7 @@ type rodeServer struct {
 	indexManager        indexmanager.IndexManager
 }
 
-func (r *rodeServer) BatchCreateOccurrences(ctx context.Context, occurrenceRequest *pb.BatchCreateOccurrencesRequest) (*pb.BatchCreateOccurrencesResponse, error) {
+func (r *RodeServer) BatchCreateOccurrences(ctx context.Context, occurrenceRequest *pb.BatchCreateOccurrencesRequest) (*pb.BatchCreateOccurrencesResponse, error) {
 	log := r.logger.Named("BatchCreateOccurrences")
 	log.Debug("received request", zap.Any("BatchCreateOccurrencesRequest", occurrenceRequest))
 
@@ -123,7 +123,7 @@ func (r *rodeServer) BatchCreateOccurrences(ctx context.Context, occurrenceReque
 	}, nil
 }
 
-func (r *rodeServer) EvaluatePolicy(ctx context.Context, request *pb.EvaluatePolicyRequest) (*pb.EvaluatePolicyResponse, error) {
+func (r *RodeServer) EvaluatePolicy(ctx context.Context, request *pb.EvaluatePolicyRequest) (*pb.EvaluatePolicyResponse, error) {
 	var err error
 	log := r.logger.Named("EvaluatePolicy").With(zap.String("policy", request.Policy), zap.String("resource", request.ResourceUri))
 	log.Debug("evaluate policy request received")
@@ -201,7 +201,7 @@ func (r *rodeServer) EvaluatePolicy(ctx context.Context, request *pb.EvaluatePol
 	}, nil
 }
 
-func (r *rodeServer) ListResources(ctx context.Context, request *pb.ListResourcesRequest) (*pb.ListResourcesResponse, error) {
+func (r *RodeServer) ListResources(ctx context.Context, request *pb.ListResourcesRequest) (*pb.ListResourcesResponse, error) {
 	log := r.logger.Named("ListResources")
 	log.Debug("received request", zap.Any("ListResourcesRequest", request))
 
@@ -240,7 +240,7 @@ func (r *rodeServer) ListResources(ctx context.Context, request *pb.ListResource
 	}, nil
 }
 
-func (r *rodeServer) ListGenericResources(ctx context.Context, request *pb.ListGenericResourcesRequest) (*pb.ListGenericResourcesResponse, error) {
+func (r *RodeServer) ListGenericResources(ctx context.Context, request *pb.ListGenericResourcesRequest) (*pb.ListGenericResourcesResponse, error) {
 	log := r.logger.Named("ListGenericResources")
 	log.Debug("received request", zap.Any("request", request))
 
@@ -274,7 +274,7 @@ func (r *rodeServer) ListGenericResources(ctx context.Context, request *pb.ListG
 	}, nil
 }
 
-func (r *rodeServer) initialize(ctx context.Context) error {
+func (r *RodeServer) Initialize(ctx context.Context) error {
 	log := r.logger.Named("initialize")
 
 	if err := r.indexManager.Initialize(ctx); err != nil {
@@ -322,7 +322,7 @@ func (r *rodeServer) initialize(ctx context.Context) error {
 	return nil
 }
 
-func (r *rodeServer) ListVersionedResourceOccurrences(ctx context.Context, request *pb.ListVersionedResourceOccurrencesRequest) (*pb.ListVersionedResourceOccurrencesResponse, error) {
+func (r *RodeServer) ListVersionedResourceOccurrences(ctx context.Context, request *pb.ListVersionedResourceOccurrencesRequest) (*pb.ListVersionedResourceOccurrencesResponse, error) {
 	log := r.logger.Named("ListVersionedResourceOccurrences")
 	log.Debug("received request", zap.Any("ListVersionedResourceOccurrencesRequest", request))
 
@@ -376,7 +376,7 @@ func (r *rodeServer) ListVersionedResourceOccurrences(ctx context.Context, reque
 	}, nil
 }
 
-func (r *rodeServer) ListOccurrences(ctx context.Context, occurrenceRequest *pb.ListOccurrencesRequest) (*pb.ListOccurrencesResponse, error) {
+func (r *RodeServer) ListOccurrences(ctx context.Context, occurrenceRequest *pb.ListOccurrencesRequest) (*pb.ListOccurrencesResponse, error) {
 	log := r.logger.Named("ListOccurrences")
 	log.Debug("received request", zap.Any("ListOccurrencesRequest", occurrenceRequest))
 
@@ -398,7 +398,7 @@ func (r *rodeServer) ListOccurrences(ctx context.Context, occurrenceRequest *pb.
 	}, nil
 }
 
-func (r *rodeServer) UpdateOccurrence(ctx context.Context, occurrenceRequest *pb.UpdateOccurrenceRequest) (*grafeas_proto.Occurrence, error) {
+func (r *RodeServer) UpdateOccurrence(ctx context.Context, occurrenceRequest *pb.UpdateOccurrenceRequest) (*grafeas_proto.Occurrence, error) {
 	log := r.logger.Named("UpdateOccurrence")
 	log.Debug("received request", zap.Any("UpdateOccurrenceRequest", occurrenceRequest))
 
@@ -421,7 +421,7 @@ func (r *rodeServer) UpdateOccurrence(ctx context.Context, occurrenceRequest *pb
 	return updatedOccurrence, nil
 }
 
-func (r *rodeServer) ValidatePolicy(ctx context.Context, policy *pb.ValidatePolicyRequest) (*pb.ValidatePolicyResponse, error) {
+func (r *RodeServer) ValidatePolicy(ctx context.Context, policy *pb.ValidatePolicyRequest) (*pb.ValidatePolicyResponse, error) {
 	log := r.logger.Named("ValidatePolicy")
 
 	if len(policy.Policy) == 0 {
@@ -489,7 +489,7 @@ func (r *rodeServer) ValidatePolicy(ctx context.Context, policy *pb.ValidatePoli
 	}, nil
 }
 
-func (r *rodeServer) CreatePolicy(ctx context.Context, policyEntity *pb.PolicyEntity) (*pb.Policy, error) {
+func (r *RodeServer) CreatePolicy(ctx context.Context, policyEntity *pb.PolicyEntity) (*pb.Policy, error) {
 	// TODO maybe check if it already exists (if we think a unique name is required)
 
 	log := r.logger.Named("CreatePolicy")
@@ -537,7 +537,7 @@ func (r *rodeServer) CreatePolicy(ctx context.Context, policyEntity *pb.PolicyEn
 	return policy, nil
 }
 
-func (r *rodeServer) GetPolicy(ctx context.Context, getPolicyRequest *pb.GetPolicyRequest) (*pb.Policy, error) {
+func (r *RodeServer) GetPolicy(ctx context.Context, getPolicyRequest *pb.GetPolicyRequest) (*pb.Policy, error) {
 	log := r.logger.Named("GetPolicy")
 
 	search := &esutil.EsSearch{
@@ -559,7 +559,7 @@ func (r *rodeServer) GetPolicy(ctx context.Context, getPolicyRequest *pb.GetPoli
 
 }
 
-func (r *rodeServer) DeletePolicy(ctx context.Context, deletePolicyRequest *pb.DeletePolicyRequest) (*emptypb.Empty, error) {
+func (r *RodeServer) DeletePolicy(ctx context.Context, deletePolicyRequest *pb.DeletePolicyRequest) (*emptypb.Empty, error) {
 	log := r.logger.Named("DeletePolicy")
 
 	search := &esutil.EsSearch{
@@ -598,7 +598,7 @@ func (r *rodeServer) DeletePolicy(ctx context.Context, deletePolicyRequest *pb.D
 	return &emptypb.Empty{}, nil
 }
 
-func (r *rodeServer) ListPolicies(ctx context.Context, listPoliciesRequest *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
+func (r *RodeServer) ListPolicies(ctx context.Context, listPoliciesRequest *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
 	log := r.logger.Named("List Policies")
 	hits, nextPageToken, err := r.genericList(ctx, log, &genericListOptions{
 		index:         r.indexManager.AliasName(policiesDocumentKind, ""),
@@ -635,7 +635,7 @@ func (r *rodeServer) ListPolicies(ctx context.Context, listPoliciesRequest *pb.L
 }
 
 // UpdatePolicy will update only the fields provided by the user
-func (r *rodeServer) UpdatePolicy(ctx context.Context, updatePolicyRequest *pb.UpdatePolicyRequest) (*pb.Policy, error) {
+func (r *RodeServer) UpdatePolicy(ctx context.Context, updatePolicyRequest *pb.UpdatePolicyRequest) (*pb.Policy, error) {
 	log := r.logger.Named("Update Policy")
 
 	// check if the policy exists
@@ -695,7 +695,7 @@ func (r *rodeServer) UpdatePolicy(ctx context.Context, updatePolicyRequest *pb.U
 	return policy, nil
 }
 
-func (r *rodeServer) RegisterCollector(ctx context.Context, registerCollectorRequest *pb.RegisterCollectorRequest) (*pb.RegisterCollectorResponse, error) {
+func (r *RodeServer) RegisterCollector(ctx context.Context, registerCollectorRequest *pb.RegisterCollectorRequest) (*pb.RegisterCollectorResponse, error) {
 	log := r.logger.Named("RegisterCollector")
 
 	if registerCollectorRequest.Id == "" {
@@ -766,7 +766,7 @@ func (r *rodeServer) RegisterCollector(ctx context.Context, registerCollectorReq
 }
 
 // CreateNote operates as a simple proxy to grafeas.CreateNote, for now.
-func (r *rodeServer) CreateNote(ctx context.Context, request *pb.CreateNoteRequest) (*grafeas_proto.Note, error) {
+func (r *RodeServer) CreateNote(ctx context.Context, request *pb.CreateNoteRequest) (*grafeas_proto.Note, error) {
 	log := r.logger.Named("CreateNote").With(zap.String("noteId", request.NoteId))
 
 	log.Debug("creating note in grafeas")
@@ -859,7 +859,7 @@ func validateResultTermsInBody(body ast.Body) bool {
 	return true
 }
 
-func (r *rodeServer) genericGet(ctx context.Context, log *zap.Logger, search *esutil.EsSearch, index string, protoMessage interface{}) (string, error) {
+func (r *RodeServer) genericGet(ctx context.Context, log *zap.Logger, search *esutil.EsSearch, index string, protoMessage interface{}) (string, error) {
 	encodedBody, requestJson := esutil.EncodeRequest(search)
 	log = log.With(zap.String("request", requestJson))
 
@@ -898,7 +898,7 @@ type genericListOptions struct {
 	sortField     string
 }
 
-func (r *rodeServer) genericList(ctx context.Context, log *zap.Logger, options *genericListOptions) (*esutil.EsSearchResponseHits, string, error) {
+func (r *RodeServer) genericList(ctx context.Context, log *zap.Logger, options *genericListOptions) (*esutil.EsSearchResponseHits, string, error) {
 	body := &esutil.EsSearch{}
 	if options.query != nil {
 		body = options.query
@@ -972,7 +972,7 @@ func (r *rodeServer) genericList(ctx context.Context, log *zap.Logger, options *
 	return searchResults.Hits, nextPageToken, nil
 }
 
-func (r *rodeServer) handlePagination(ctx context.Context, log *zap.Logger, body *esutil.EsSearch, index, pageToken string, pageSize int32) (string, []func(*esapi.SearchRequest), error) {
+func (r *RodeServer) handlePagination(ctx context.Context, log *zap.Logger, body *esutil.EsSearch, index, pageToken string, pageSize int32) (string, []func(*esapi.SearchRequest), error) {
 	log = log.With(zap.String("pageToken", pageToken), zap.Int32("pageSize", pageSize))
 
 	var (
